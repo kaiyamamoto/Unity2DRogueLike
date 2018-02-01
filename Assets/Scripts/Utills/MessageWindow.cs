@@ -31,7 +31,7 @@ public class MessageWindow : MonoBehaviour
 
     /// 表示可能ログ最大数
     [SerializeField]
-    private int MESSAGE_MAX = 5;
+    private static int MESSAGE_MAX = 5;
 
     /// 各レベルのログ色
     private static Color[] MESSAGE_COLOR =
@@ -46,7 +46,7 @@ public class MessageWindow : MonoBehaviour
     [SerializeField]
     private Text _messageWindow = null;
 
-    private Queue<MessageData> _messageQue = null;    // ログキュー
+    private Queue<MessageData> _messageQue = new Queue<MessageData>(MESSAGE_MAX);    // ログキュー
     private Vector2 _scrollPosition = Vector2.zero;                  // スクロールビュー位置
     private bool _isNeedScrollReset = false;                         // スクロール位置リセットフラグ
 
@@ -60,8 +60,6 @@ public class MessageWindow : MonoBehaviour
             Destroy(this.gameObject);
             return;
         }
-
-        _messageQue = new Queue<MessageData>(MESSAGE_MAX);
 
         // シーン間をまたぐ
         DontDestroyOnLoad(this.gameObject);

@@ -3,15 +3,19 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System;
 
 public class InGameManager : MonoBehaviour
 {
+
+    private const float DASH_SPEED = 0.1f;
+
     public float levelStartDelay = 2f;                      // 開始前の待機時間
     public float turnDelay = 0.1f;                          // 移動のディレイ
     public int playerStaminaPoints = 100;                   // スタミナの開始値
-    private static InGameManager instance = null;             // インスタンス
+    private static InGameManager instance = null;           // インスタンス
     [HideInInspector]
-    public bool playersTurn = true;       // プレイヤーの移動フラグ
+    public bool playersTurn = true;                         // プレイヤーの移動フラグ
 
     private Player player;                                  // プレイヤー
     private Text levelText;                                 // レベル表記用テキスト
@@ -72,9 +76,9 @@ public class InGameManager : MonoBehaviour
 
     private IEnumerator InitSetting()
     {
-        yield return FadeManager.Instance.FadeIn(0.0f);
-
         doingSetup = true;
+        yield return FadeManager.Instance.FadeIn(1.0f);
+
         levelText = GameObject.Find("LevelText").GetComponent<Text>();
         levelText.text = "Lv" + level;
         levelText.gameObject.SetActive(true);
@@ -84,11 +88,13 @@ public class InGameManager : MonoBehaviour
         // 敵を全て削除
         enemies.Clear();
 
+        ElementGenerator e = (ElementGenerator)FindObjectOfType(typeof(ElementGenerator));
+        e.Generate();
         yield return new WaitForSeconds(1.0f);
-
-        yield return FadeManager.Instance.FadeOut(1.0f);
         // 非表示
         levelText.gameObject.SetActive(false);
+
+        yield return FadeManager.Instance.FadeOut(1.0f);
         doingSetup = false;
 
     }
@@ -127,13 +133,16 @@ public class InGameManager : MonoBehaviour
         // 敵移動フラグ
         enemiesMoving = true;
 
-        // 遅延
-        yield return new WaitForSeconds(turnDelay);
-
-        if (enemies.Count == 0)
+        if (Input.GetKey(KeyCode.LeftShift) == false) 
         {
+            // 遅延
             yield return new WaitForSeconds(turnDelay);
+            if (enemies.Count == 0)
+            {
+                yield return new WaitForSeconds(turnDelay);
+            }
         }
+
 
         for (int i = 0; i < enemies.Count; i++)
         {

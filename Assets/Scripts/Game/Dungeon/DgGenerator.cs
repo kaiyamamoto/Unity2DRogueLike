@@ -34,14 +34,16 @@ public class DgGenerator : Generator
     /// </summary>
     private List<DgDivision> _divList = null;
 
+    private Layer2D _layer;
+
     const string wallName = "Sprites\\test\\dot_0";
     const string tileName = "Sprites\\Tile\\tile";
 
-    public override Layer2D Generate(Layer2D layer)
+    public override void Generate(List<Layer2D> layer)
     {
         // データ取得
-        WIDTH = layer.Width;
-        HEIGHT = layer.Height;
+        WIDTH = layer[(int)LayerType.Under].Width;
+        HEIGHT = layer[(int)LayerType.Under].Height;
 
         // 初期化
         // 2次元配列初期化
@@ -100,7 +102,8 @@ public class DgGenerator : Generator
                 }
             }
         }
-        return _layer;
+
+        layer[(int)LayerType.Under] = _layer;
     }
 
     /// <summary>

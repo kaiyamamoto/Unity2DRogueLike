@@ -13,14 +13,27 @@ public abstract class Generator : MonoBehaviour {
     /// </summary>
     protected int HEIGHT = 0;
 
-    /// <summary>
-    /// 2次元配列情報
-    /// </summary>
-    protected Layer2D _layer = null;
-    public Layer2D Layer
-    {
-        get { return _layer; }
-    }
+    public abstract void Generate(List<Layer2D> layer);
 
-    public abstract Layer2D Generate(Layer2D layer);
+    /// <summary>
+    /// 何も存在しない位置のインデックスリスト作成
+    /// </summary>
+    /// <param name="list">現在のLayerデータ</param>
+    /// <returns>生成可能位置のインデックスリスト</returns>
+    protected List<KeyValuePair<int, int>> GetGeneratedList(Layer2D layer)
+    {
+        var gList = new List<KeyValuePair<int, int>>();
+
+        for (int j = 0; j < layer.Height; j++)
+        {
+            for (int i = 0; i < layer.Width; i++)
+            {
+                if (layer.Get(i, j) == (int)ChipType.Road)
+                {
+                    gList.Add(new KeyValuePair<int, int>(i, j));
+                }
+            }
+        }
+        return gList;
+    }
 }

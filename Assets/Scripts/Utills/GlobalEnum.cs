@@ -14,7 +14,8 @@ public enum Direction
     Up = 1 << 0,
     Down = 1 << 1,
     Left = 1 << 2,
-    Right = 1 << 3
+    Right = 1 << 3,
+    Dash = 1 << 4
 }
 
 /// <summary>
@@ -25,6 +26,8 @@ public enum ChipType
     None = -1,
     Road,
     Wall,
+    Goal,
+    Player,
     length
 }
 

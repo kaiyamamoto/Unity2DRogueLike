@@ -5,7 +5,7 @@ using UnityEngine;
 public class Actor : Token {
 
     // 行動状態
-    enum Act
+    public enum Act
     {
         KeyInput, // キー入力待ち。もしくは待機中
 

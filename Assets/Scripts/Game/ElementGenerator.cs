@@ -31,7 +31,6 @@ public class ElementGenerator : MonoBehaviour {
     List<Layer2D> _layerList = null;
 
     void Start () {
-        this.Generate();
 	}
 
     public List<Layer2D> Generate()
@@ -42,18 +41,14 @@ public class ElementGenerator : MonoBehaviour {
         for (int i = 0; i < (int)LayerType.length; i++){
             _layerList.Add(new Layer2D(WIDTH, HEIGHT));
         }
- 
-        var topLayer = _layerList[(int)LayerType.Top];
-        var underLayer = _layerList[(int)LayerType.Under];
 
-        underLayer = _dgGenerator.Generate(underLayer);
+        _dgGenerator.Generate(_layerList);
 
-        //_topLayer = _objGenerator.Generate(underLayer);
-        //_topLayer = _itemGenerator.Generate(topLayer);
-        topLayer = _charGenerator.Generate(underLayer);
+        _layerList[(int)LayerType.Top].Fill((int)ChipType.None);
 
-        _layerList[(int)LayerType.Top] = topLayer;
-        _layerList[(int)LayerType.Under] = underLayer;
+        _objGenerator.Generate(_layerList);
+        //_itemGenerator.Generate(topLayer);
+        _charGenerator.Generate(_layerList);
 
         InGameManager.GetInstance().LayerList = _layerList;
 

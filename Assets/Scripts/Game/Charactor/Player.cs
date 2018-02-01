@@ -28,7 +28,7 @@ public class Player : MovingObject
     private void Update()
     {
         // 自分のターンじゃないとき処理しない
-        //if (!InGameManager.GetInstance().playersTurn) return;
+        if (!InGameManager.GetInstance().playersTurn) return;
 
         int horizontal = 0;     // 水平移動方向
         int vertical = 0;       // 垂直移動方向

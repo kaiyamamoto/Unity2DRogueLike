@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using System;
 using System.Linq;
 using System.Collections;
@@ -44,6 +45,8 @@ public class FadeManager : MonoBehaviour
     [SerializeField]
     private Color _fadeColor = Color.black;
 
+    private Image _image = null;
+
     public void Awake()
     {
         // 既に存在している場合削除
@@ -56,11 +59,13 @@ public class FadeManager : MonoBehaviour
         // 初期透明度反映
         StartCoroutine(FadeIn(0.0f));
 
+        _image = GetComponent<Image>();
+
         // シーン間をまたぐ
         DontDestroyOnLoad(this.gameObject);
     }
 
-    public void OnRenderObject()
+    private void FixedUpdate()
     {
         // フェード中更新
         if (this._isFading)
@@ -74,11 +79,9 @@ public class FadeManager : MonoBehaviour
     {
         // 色と透明度を更新して白テクスチャを描画
         this._fadeColor.a = this._fadeAlpha;
-        var mat = new Material(Shader.Find("Diffuse"));
+        var mat = _image.material;
         mat.color = this._fadeColor;
-        //GUI.color = this._fadeColor;
-        var rect = new Rect(0, 0, Screen.width, Screen.height);
-        Graphics.DrawTexture(rect, Texture2D.whiteTexture, mat);
+        _image.material = mat;
     }
 
     /// <summary>
@@ -107,7 +110,7 @@ public class FadeManager : MonoBehaviour
         while (time <= interval)
         {
             if (interval == 0) this._fadeAlpha = 1;
-            else this._fadeAlpha = Mathf.Lerp(0f, 1f, time / interval) * Time.deltaTime;
+            else this._fadeAlpha = Mathf.Lerp(0f, 1f, time / interval);
             time += Time.deltaTime;
             yield return 0;
         }
@@ -125,7 +128,7 @@ public class FadeManager : MonoBehaviour
         float time = 0;
         while (time <= interval)
         {
-            this._fadeAlpha = Mathf.Lerp(1f, 0f, time / interval) * Time.deltaTime;
+            this._fadeAlpha = Mathf.Lerp(1f, 0f, time / interval);
             time += Time.deltaTime;
             yield return 0;
         }

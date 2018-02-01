@@ -35,12 +35,16 @@ public abstract class MovingObject : Actor
         var type = ChipUtil.GetExistsChip(layer, end2d);
         if ( (type!=ChipType.Wall)&& (type != ChipType.None))
         {
+            var time = _moveTime;
+
+            if ((dir & global::Direction.Dash) != 0) time = 0.001f;
+
             // 移動
             if (m_moveTween == null)
             {
                 m_moveTween = this.gameObject.transform
                     .DOLocalMove(new Vector3(end.x, end.y, 0.0f)
-                    , _moveTime).OnComplete(() => { m_moveTween = null; });
+                    , time).OnComplete(() => { m_moveTween = null; });
             }
             return true;
         }

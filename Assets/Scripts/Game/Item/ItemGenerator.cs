@@ -5,9 +5,8 @@ using UnityEngine;
 
 public class ItemGenerator :Generator {
 
-    public override Layer2D Generate(Layer2D layer)
+    public override void Generate(List<Layer2D> layer)
     {
 
-        return null;
     }
 }
