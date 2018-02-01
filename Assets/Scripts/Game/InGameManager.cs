@@ -16,7 +16,6 @@ public class InGameManager : MonoBehaviour
     private Player player;                                  // プレイヤー
     private Text levelText;                                 // レベル表記用テキスト
     private Text staminaText;                               // スタミナ表記用テキスト
-    private GameObject levelImage;                          // レベルのプレハブ
     private int level = 1;                                  // 現在のレベル
     private List<Enemy> enemies;                            // 敵のリスト
     private bool enemiesMoving;                             // 敵の移動フラグ
@@ -45,7 +44,7 @@ public class InGameManager : MonoBehaviour
         enemies = new List<Enemy>();
 
         // ゲームの初期化
-        InitGame();
+        StartCoroutine(InitSetting());
     }
 
     // シーンロード後に呼ばれる
@@ -65,27 +64,32 @@ public class InGameManager : MonoBehaviour
     }
 
     // ゲームの初期化
-    void InitGame()
+    private void InitGame()
     {
+        StartCoroutine(InitSetting());
+    }
+
+    private IEnumerator InitSetting()
+    {
+        yield return FadeManager.Instance.FadeIn(0.0f);
+
         doingSetup = true;
-        levelImage = GameObject.Find("LevelImage");
         levelText = GameObject.Find("LevelText").GetComponent<Text>();
         levelText.text = "Lv" + level;
-        levelImage.SetActive(true);
+        levelText.gameObject.SetActive(true);
 
         staminaText = GameObject.Find("FoodText").GetComponent<Text>();
 
-        Invoke("HideLevelImage", levelStartDelay);
-
         // 敵を全て削除
         enemies.Clear();
-    }
 
-    void HideLevelImage()
-    {
+        yield return new WaitForSeconds(1.0f);
+
+        yield return FadeManager.Instance.FadeOut(1.0f);
         // 非表示
-        levelImage.SetActive(false);
+        levelText.gameObject.SetActive(false);
         doingSetup = false;
+
     }
 
     void Update()
@@ -111,7 +115,7 @@ public class InGameManager : MonoBehaviour
     {
         levelText.fontSize = 20;
         levelText.text = "GameOver You Lv:" + level;
-        levelImage.SetActive(true);
+        levelText.gameObject.SetActive(true);
 
         enabled = false;
     }
