@@ -76,8 +76,9 @@ public class FadeManager : MonoBehaviour
         this._fadeColor.a = this._fadeAlpha;
         var mat = new Material(Shader.Find("Diffuse"));
         mat.color = this._fadeColor;
-        GUI.color = this._fadeColor;
-        Graphics.DrawTexture(new Rect(0, 0, Screen.width, Screen.height), Texture2D.whiteTexture, mat);
+        //GUI.color = this._fadeColor;
+        var rect = new Rect(0, 0, Screen.width, Screen.height);
+        Graphics.DrawTexture(rect, Texture2D.whiteTexture, mat);
     }
 
     /// <summary>

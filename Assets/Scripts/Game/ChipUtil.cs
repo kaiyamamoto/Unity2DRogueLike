@@ -64,6 +64,8 @@ public class ChipUtil : MonoBehaviour {
         if (vel.x < 0) dir |= Direction.Left;
         if (vel.x > 0) dir |= Direction.Right;
 
+        MessageWindow.Instance.Message(dir.ToString());
+
         return dir;
     }
 

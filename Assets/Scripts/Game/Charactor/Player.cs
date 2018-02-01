@@ -37,11 +37,11 @@ public class Player : MovingObject
         horizontal = (int)(Input.GetAxisRaw("Horizontal"));
         // 垂直移動方向取得
         vertical = (int)(Input.GetAxisRaw("Vertical"));
-        var dir = ChipUtil.CreateDirection(new Vector2Int(horizontal, vertical));
 
         // 移動があるか確認
         if (horizontal != 0 || vertical != 0)
         {
+            var dir = ChipUtil.CreateDirection(new Vector2Int(horizontal, vertical));
             var list = InGameManager.GetInstance().LayerList;
             AttemptMove(list[(int)LayerType.Under], dir);
         }

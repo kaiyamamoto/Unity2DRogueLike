@@ -44,7 +44,7 @@ public class InGameManager : MonoBehaviour
         enemies = new List<Enemy>();
 
         // ゲームの初期化
-        StartCoroutine(InitSetting());
+        InitGame();
     }
 
     // シーンロード後に呼ばれる
@@ -67,6 +67,7 @@ public class InGameManager : MonoBehaviour
     private void InitGame()
     {
         StartCoroutine(InitSetting());
+        MessageWindow.Instance.Message("ゲーム初期化");
     }
 
     private IEnumerator InitSetting()
