@@ -20,7 +20,7 @@ public class InGameManager : MonoBehaviour
     private Player player;                                  // プレイヤー
     private Text levelText;                                 // レベル表記用テキスト
     private Text staminaText;                               // スタミナ表記用テキスト
-    private int level = 1;                                  // 現在のレベル
+    private int level = 0;                                  // 現在のレベル
     private List<Enemy> enemies;                            // 敵のリスト
     private bool enemiesMoving;                             // 敵の移動フラグ
     private bool doingSetup = true;                         // ボードを設定中のフラグ
@@ -49,6 +49,7 @@ public class InGameManager : MonoBehaviour
 
         // ゲームの初期化
         InitGame();
+
     }
 
     // シーンロード後に呼ばれる
@@ -62,22 +63,27 @@ public class InGameManager : MonoBehaviour
     // シーンロード後に呼ばれるコールバック
     static private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {
-        // レベルを+してゲーム初期化
-        instance.level++;
-        instance.InitGame();
     }
 
     // ゲームの初期化
-    private void InitGame()
+    public void InitGame()
     {
         StartCoroutine(InitSetting());
-        MessageWindow.Instance.Message("ゲーム初期化");
     }
 
     private IEnumerator InitSetting()
     {
         doingSetup = true;
         yield return FadeManager.Instance.FadeIn(1.0f);
+
+        // レベルを+してゲーム初期化
+        instance.level++;
+
+        var async = SceneManager.LoadSceneAsync(1, LoadSceneMode.Single);
+        while (!async.isDone)
+        {
+            yield return null;
+        }
 
         levelText = GameObject.Find("LevelText").GetComponent<Text>();
         levelText.text = "Lv" + level;
@@ -153,6 +159,16 @@ public class InGameManager : MonoBehaviour
         // プレイヤーターン開始
         playersTurn = true;
         enemiesMoving = false;
+    }
+
+    // ゴールのチェック
+    public bool GoalCheck(Vector2Int pos)
+    {
+        if(_layerList[(int)LayerType.Top].Get(pos.x,pos.y)==(int)ChipType.Goal)
+        {
+            return true;
+        }
+        return false;
     }
 }
 

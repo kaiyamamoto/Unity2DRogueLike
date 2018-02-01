@@ -436,7 +436,7 @@ public class DgGenerator : Generator
     {
         if (GUI.Button(new Rect(160, 160, 128, 32), "もう１回"))
         {
-            SceneManager.LoadScene(0);
+            InGameManager.GetInstance().InitGame();
         }
     }
 }

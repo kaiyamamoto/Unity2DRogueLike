@@ -47,17 +47,29 @@ public class Player : MovingObject
         }
     }
 
-    protected override void AttemptMove(Layer2D layer,Direction dir)
+    protected override Vector3 AttemptMove(Layer2D layer,Direction dir)
     {
-        base.AttemptMove(layer,dir);
+        var move = base.AttemptMove(layer,dir);
 
         // スタミナを減らす
         _stamina--;
 
         CheckIfGameOver();
 
+        // ゴールがある場合リロード
+        if(InGameManager.GetInstance().GoalCheck(ChipUtil.GetChipPos(new Vector2(move.x,move.y))))
+        {
+            // 遅延してリスタート
+            Restart();
+
+            // プレイヤーを一度無効
+            enabled = false;
+        }
+
         // プレイヤーのターンを終了する
         InGameManager.GetInstance().playersTurn = false;
+
+        return move;
     }
 
     protected override void OnCantMove<T>(T component)
@@ -67,22 +79,9 @@ public class Player : MovingObject
         hitWall.DamageWall(_wallDamage);
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        // 出口の時
-        if (other.tag == "Exit")
-        {
-            // 遅延してリスタート
-            Invoke("Restart", _restartLevelDelay);
-
-            // プレイヤーを一度無効
-            enabled = false;
-        }
-    }
-
     private void Restart()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex, LoadSceneMode.Single);
+        InGameManager.GetInstance().InitGame();
     }
 
     private void CheckIfGameOver()

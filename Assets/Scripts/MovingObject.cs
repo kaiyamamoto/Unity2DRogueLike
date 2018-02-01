@@ -19,12 +19,12 @@ public abstract class MovingObject : Actor
     {
     }
 
-    protected bool Move(Layer2D layer, Direction dir)
+    protected Vector3 Move(Layer2D layer, Direction dir)
     {
         //// 移動開始場所
         //var start = new Vector3(ChipUtill.GetChipX(PosX), ChipUtill.GetChipY(PosY), 0.0f);
         var end2d = ChipUtil.MoveToPosition(GetChipPosition(), dir);
-        var end = new Vector2(ChipUtil.GetWorldPosX(end2d.x), ChipUtil.GetWorldPosY(end2d.y));
+        var end = new Vector3(ChipUtil.GetWorldPosX(end2d.x), ChipUtil.GetWorldPosY(end2d.y),0.0f);
 
         // 移動先まであたり判定
         //boxCollider.enabled = false;
@@ -46,26 +46,23 @@ public abstract class MovingObject : Actor
                     .DOLocalMove(new Vector3(end.x, end.y, 0.0f)
                     , time).OnComplete(() => { m_moveTween = null; });
             }
-            return true;
+            return end;
         }
 
-        return false;
+        return end;
     }
 
     // 移動しようとする
-    protected virtual void AttemptMove(Layer2D layer,Direction dir)
+    protected virtual Vector3 AttemptMove(Layer2D layer,Direction dir)
     {
         // 移動してみる
-        bool move = Move(layer,dir);
+        var move = Move(layer,dir);
 
-        // 当たっていなかったら終わりんご
-        if (!move)
-            return;
+        // 移動していなかったら終わりんご
+        if (move == transform.position) return move;
 
-        //T hitComponent = hit.transform.GetComponent<T>();
-        //// 移動していない時で何かぶつかった時の処理
-        //if (!canMove && hitComponent != null)
-        //    OnCantMove(hitComponent);
+        return move;
+
     }
 
     // 移動していないときの処理

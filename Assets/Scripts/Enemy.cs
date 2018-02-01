@@ -27,13 +27,13 @@ public class Enemy : MovingObject
 
     //Override the AttemptMove function of MovingObject to include functionality needed for Enemy to skip turns.
     //See comments in MovingObject for more on how base AttemptMove function works.
-    protected override void AttemptMove(Layer2D layer, Direction dir)
+    protected override Vector3 AttemptMove(Layer2D layer, Direction dir)
     {
         //Check if skipMove is true, if so set it to false and skip this turn.
         if (skipMove)
         {
             skipMove = false;
-            return;
+            return new Vector3(0.0f, 0.0f, 0.0f);
 
         }
 
@@ -42,6 +42,8 @@ public class Enemy : MovingObject
 
         //Now that Enemy has moved, set skipMove to true to skip next move.
         skipMove = true;
+
+        return new Vector3(0.0f, 0.0f, 0.0f);
     }
 
 
