@@ -28,6 +28,7 @@ public enum ChipType
     Wall,
     Goal,
     Player,
+    Enemy,
     length
 }
 

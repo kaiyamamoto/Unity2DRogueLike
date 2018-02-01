@@ -107,10 +107,11 @@ public class FadeManager : MonoBehaviour
         // 徐々に暗転
         this._isFading = true;
         float time = 0;
+        float initFade = this._fadeAlpha;
         while (time <= interval)
         {
             if (interval == 0) this._fadeAlpha = 1;
-            else this._fadeAlpha = Mathf.Lerp(0f, 1f, time / interval);
+            else this._fadeAlpha = Mathf.Lerp(initFade, 1f, time / interval);
             time += Time.deltaTime;
             yield return 0;
         }

@@ -50,6 +50,7 @@ public class Util
         obj.AddComponent<SpriteRenderer>();
         obj.AddComponent<Rigidbody2D>();
         var player = obj.AddComponent<Player>();
+        player.tag = "Player";
 
         // スプライト設定
         player.SetSprite(GetSprite(SpriteFile, SpriteName));
@@ -62,6 +63,24 @@ public class Util
         return player;
     }
 
+    // トークンを動的生成する
+    public static Enemy CreateEnemy(float x, float y, string SpriteFile, string SpriteName, string objName = "Token")
+    {
+        GameObject obj = new GameObject(objName);
+        obj.AddComponent<SpriteRenderer>();
+        obj.AddComponent<Rigidbody2D>();
+        var enemy = obj.AddComponent<Enemy>();
+
+        // スプライト設定
+        enemy.SetSprite(GetSprite(SpriteFile, SpriteName));
+        // 座標を設定
+        enemy.X = x;
+        enemy.Y = y;
+        // 重力を無効にする
+        enemy.GravityScale = 0.0f;
+
+        return enemy;
+    }
 
 
     /// スプライトをリソースから取得する

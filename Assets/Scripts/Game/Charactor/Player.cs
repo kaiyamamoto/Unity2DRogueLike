@@ -53,6 +53,7 @@ public class Player : MovingObject
 
         // スタミナを減らす
         _stamina--;
+        InGameManager.GetInstance().staminaText.text = "Stamina: " + Stamina;
 
         CheckIfGameOver();
 
@@ -86,7 +87,7 @@ public class Player : MovingObject
 
     private void CheckIfGameOver()
     {
-        //if (_stamina < 0) InGameManager.GetInstance().GameOver();
+        if (_stamina <= 0) StartCoroutine(InGameManager.GetInstance().GameOver());
     }
 }
 

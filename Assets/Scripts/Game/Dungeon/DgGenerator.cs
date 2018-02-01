@@ -36,8 +36,8 @@ public class DgGenerator : Generator
 
     private Layer2D _layer;
 
-    const string wallName = "Sprites\\test\\dot_0";
-    const string tileName = "Sprites\\Tile\\tile";
+    const string filePath = "Sprites\\Tile\\";
+    const string fileName = "tiles";
 
     public override void Generate(List<Layer2D> layer)
     {
@@ -80,24 +80,30 @@ public class DgGenerator : Generator
 
         // タイルを配置
         var dangeon = new GameObject("Dangeon");
+        Sprite[] sprites = Resources.LoadAll<Sprite>(filePath + fileName);
         for (int j = 0; j < _layer.Height; j++)
         {
             for (int i = 0; i < _layer.Width; i++)
             {
                 if (_layer.Get(i, j) == (int)ChipType.Wall)
                 {
+                    int a = Random.Range(25, 28);
+                    string name = fileName + "_" + a.ToString();
+
                     // 壁生成
                     float x = ChipUtil.GetWorldPosX(i);
                     float y = ChipUtil.GetWorldPosY(j);
-                    Util.CreateToken(x, y, wallName, "", "Wall")
+                    Util.CreateToken(x, y, filePath+fileName, name, "Wall")
                         .transform.parent = dangeon.transform;
                 }
                 else if(_layer.Get(i, j) == (int)ChipType.Road)
                 {
+                    int a = Random.Range(32, 39);
+                    string name = fileName + "_" + a.ToString();
                     // 壁生成
                     float x = ChipUtil.GetWorldPosX(i);
                     float y = ChipUtil.GetWorldPosY(j);
-                    Util.CreateToken(x, y, tileName, "", "Road")
+                    Util.CreateToken(x, y, filePath+fileName, name, "Road")
                         .transform.parent = dangeon.transform;
                 }
             }
@@ -430,13 +436,5 @@ public class DgGenerator : Generator
             bottom = tmp;
         }
         _layer.FillRectLTRB(x, top, x + 1, bottom + 1, (int)ChipType.Road);
-    }
-
-    void OnGUI()
-    {
-        if (GUI.Button(new Rect(160, 160, 128, 32), "もう１回"))
-        {
-            InGameManager.GetInstance().InitGame();
-        }
     }
 }

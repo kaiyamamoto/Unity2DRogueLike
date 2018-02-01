@@ -19,11 +19,12 @@ public class InGameManager : MonoBehaviour
 
     private Player player;                                  // プレイヤー
     private Text levelText;                                 // レベル表記用テキスト
-    private Text staminaText;                               // スタミナ表記用テキスト
+    public Text staminaText;                               // スタミナ表記用テキスト
     private int level = 0;                                  // 現在のレベル
     private List<Enemy> enemies;                            // 敵のリスト
     private bool enemiesMoving;                             // 敵の移動フラグ
     private bool doingSetup = true;                         // ボードを設定中のフラグ
+    public bool gameover = false;                         // ボードを設定中のフラグ
 
     // レイヤーのリスト
     private List<Layer2D> _layerList;
@@ -52,6 +53,17 @@ public class InGameManager : MonoBehaviour
 
     }
 
+    void OnGUI()
+    {
+        if (!gameover) return;
+
+        if (GUI.Button(new Rect(180, 160, 128, 32), "もう１回"))
+        {
+            level = 0;
+            InGameManager.GetInstance().InitGame();
+        }
+    }
+
     // シーンロード後に呼ばれる
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static public void CallbackInitialization()
@@ -68,6 +80,7 @@ public class InGameManager : MonoBehaviour
     // ゲームの初期化
     public void InitGame()
     {
+        gameover = false;
         StartCoroutine(InitSetting());
     }
 
@@ -107,10 +120,9 @@ public class InGameManager : MonoBehaviour
 
     void Update()
     {
+        if (doingSetup) return;
 
-        //staminaText.text = "Stamina: " + player.Stamina;
-
-        if (playersTurn || enemiesMoving || doingSetup)
+        if (playersTurn || enemiesMoving)
             return;
 
         // 敵の動き
@@ -124,13 +136,18 @@ public class InGameManager : MonoBehaviour
     }
 
 
-    public void GameOver()
+    public IEnumerator GameOver()
     {
+        doingSetup = true;
+
+        yield return FadeManager.Instance.FadeIn(1.0f);
+
         levelText.fontSize = 20;
         levelText.text = "GameOver You Lv:" + level;
         levelText.gameObject.SetActive(true);
 
-        enabled = false;
+        gameover = true;
+        doingSetup = false;
     }
 
     // 敵移動コルーチン
@@ -153,7 +170,7 @@ public class InGameManager : MonoBehaviour
         for (int i = 0; i < enemies.Count; i++)
         {
             // 敵の移動
-            enemies[i].MoveEnemy();
+            enemies[i].MoveEnemy(_layerList[(int)LayerType.Under]);
             yield return new WaitForSeconds(enemies[i].MoveTime);
         }
         // プレイヤーターン開始
